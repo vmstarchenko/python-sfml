@@ -5,13 +5,11 @@ import os.path
 import shutil
 from glob import glob
 from subprocess import call
-from setuptools import setup, Command, Extension
+from setuptools import setup, Command, Extension, dist
 
-try:
-    from Cython.Distutils import build_ext
-except ImportError:
-    print("Please install Cython and try again.")
-    exit(1)
+dist.Distribution().fetch_build_eggs(['cython', 'setuptools>=18.0'])
+
+from Cython.Distutils import build_ext
 
 SFML_HEADERS = os.getenv('SFML_HEADERS')
 SFML_LIBRARIES = os.getenv('SFML_LIBRARIES')
