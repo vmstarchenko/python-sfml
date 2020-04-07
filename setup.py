@@ -11,13 +11,16 @@ dist.Distribution().fetch_build_eggs(['cython', 'setuptools>=18.0'])
 
 from Cython.Distutils import build_ext
 
+
 SFML_HEADERS = os.getenv('SFML_HEADERS')
 SFML_LIBRARIES = os.getenv('SFML_LIBRARIES')
+
 
 if platform.architecture()[0] == "32bit":
     arch = "x86"
 elif platform.architecture()[0] == "64bit":
     arch = "x64"
+
 
 class CythonBuildExt(build_ext):
     """ Updated version of cython build_ext command.
@@ -89,15 +92,32 @@ if sys.hexversion >= 0x03050000:
 if SFML_LIBRARIES:
     include_dirs.append(SFML_LIBRARIES)
 
-def extension(name, files, libs): return Extension(
+
+# export LD_PRELOAD=libasan.so
+
+extra_compile_args = [
+    # "-O3",
+    "-std=c++11",
+    "-g",
+    # "-static-libasan",
+    # "-fsanitize=leak",
+    # "-fsanitize=address",
+    # "-fsanitize=pointer-subtract",
+]
+
+
+def extension(name, files, libs):
+    return Extension(
         name='sfml.' + name,
         sources=[os.path.join('src', 'sfml', name, filename) for filename in files],
+        extra_compile_args=extra_compile_args,
         include_dirs=include_dirs,
         library_dirs=library_dirs,
         language='c++',
         libraries=libs,
         define_macros=[('SFML_STATIC', '1')] if platform.system() == 'Windows' else []
     )
+
 
 if platform.system() == 'Windows':
     system_libs = [

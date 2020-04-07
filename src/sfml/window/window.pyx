@@ -1260,6 +1260,13 @@ class Wheel(IntEnum):
     HORIZONTAL_WHEEL = sf.mouse.HorizontalWheel
 
 cdef class Mouse:
+    LEFT = Button.LEFT
+    RIGHT = Button.RIGHT
+    MIDDLE = Button.MIDDLE
+    X_BUTTON1 = Button.X_BUTTON1
+    X_BUTTON2 = Button.X_BUTTON2
+    BUTTON_COUNT = Button.BUTTON_COUNT
+
     def __init__(self):
         raise NotImplementedError("This class is not meant to be instantiated!")
 
